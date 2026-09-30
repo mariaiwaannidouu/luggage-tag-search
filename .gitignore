@@ -1,0 +1,24 @@
+# colcon
+build/
+install/
+log/
+
+# Python
+__pycache__/
+*.pyc
+*.egg-info/
+
+# Βάρη ML μοντέλων (δεν ανεβαίνουν στο repo)
+*.pt
+*.pth
+*.onnx
+weights/
+
+# Editors / OS
+.vscode/
+.idea/
+*.swp
+*~
+.DS_Store
+Thumbs.db
+desktop.ini

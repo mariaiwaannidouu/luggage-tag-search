@@ -1,0 +1,10 @@
+moveit_setup_assistant_config:
+  urdf:
+    package: my_ur5e_controller
+    relative_path: urdf/ur5e_with_camera.xacro
+  srdf:
+    relative_path: config/ur.srdf
+  package_settings:
+    author_name: ""
+    author_email: ""
+    generated_timestamp: 1784027778

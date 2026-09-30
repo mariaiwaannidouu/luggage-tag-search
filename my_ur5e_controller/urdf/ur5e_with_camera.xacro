@@ -1,0 +1,113 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://wiki.ros.org/xacro" name="ur">
+
+  <!-- 1. Δηλώνουμε τα ορίσματα που στέλνει το launch file για να τα πάρει "passthrough" -->
+  <xacro:arg name="ur_type" default="ur5e"/>
+  <xacro:arg name="name" default="ur"/>
+  <xacro:arg name="safety_limits" default="true"/>
+  <xacro:arg name="safety_pos_margin" default="0.15"/>
+  <xacro:arg name="safety_k_position" default="20"/>
+  <xacro:arg name="tf_prefix" default=""/>
+  <xacro:arg name="sim_ignition" default="false"/>
+  <xacro:arg name="sim_gazebo" default="false"/>
+  <xacro:arg name="simulation_controllers" default=""/>
+
+  
+  <xacro:include filename="$(find ur_simulation_gz)/urdf/ur_gz.urdf.xacro"/>
+
+  <!-- 3. Η Κάμερά μας -->
+  <link name="gemini_camera_link">
+    <visual>
+      <geometry>
+        <box size="0.023 0.042 0.042"/>
+      </geometry>
+      <material name="black">
+        <color rgba="0.1 0.1 0.1 1"/>
+      </material>
+    </visual>
+    <collision>
+      <geometry>
+        <box size="0.023 0.042 0.042"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <mass value="0.068"/>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <inertia ixx="0.00001" ixy="0.0" ixz="0.0" iyy="0.00001" iyz="0.0" izz="0.00001"/>
+    </inertial>
+  </link>
+
+  <!-- 4. Σύνδεση της κάμερας -->
+  <joint name="camera_joint" type="fixed">
+    <parent link="tool0"/>
+    <child link="gemini_camera_link"/>
+    <origin xyz="0 0.049 -0.025" rpy="0 0 1.5708"/>
+  </joint>
+
+<link name="gemini_camera_link_optical"/>
+
+<joint name="gemini_camera_optical_joint" type="fixed">
+  <parent link="gemini_camera_link"/>
+  <child link="gemini_camera_link_optical"/>
+  <origin xyz="0 0 0" rpy="-1.5707963 0 -1.5707963"/>
+</joint>
+
+<gazebo>
+    <plugin filename="gz-sim-sensors-system" name="gz::sim::systems::Sensors">
+      <render_engine>ogre2</render_engine>
+    </plugin>
+  </gazebo>
+
+<gazebo reference="gemini_camera_link">
+    <sensor name="gemini_305_rgbd" type="rgbd_camera">
+    <gz_frame_id>gemini_camera_link</gz_frame_id>
+      <pose>0.015 0 0 0 0 0</pose>
+      <always_on>1</always_on>
+      <update_rate>30.0</update_rate>
+      <visualize>true</visualize>
+      <topic>camera/image</topic>
+      <camera>
+        <optical_frame_id>gemini_camera_link_optical</optical_frame_id>
+        <horizontal_fov>1.64</horizontal_fov>
+        <image>
+          <width>1280</width>
+          <height>800</height>
+        </image>
+        <clip>
+          <near>0.04</near>
+          <far>2.0</far>
+        </clip>
+      </camera>
+    </sensor>
+  </gazebo>
+
+<!-- Το μοντέλο του End Effector (Γάντζος) -->
+  <link name="gripper_link">
+    <visual>
+      <geometry>
+        <mesh filename="file://$(find my_ur5e_controller)/meshes/gripper.stl" scale="0.001 0.001 0.001"/>
+      </geometry>
+      <material name="grey">
+        <color rgba="0.5 0.5 0.5 1"/>
+      </material>
+    </visual>
+    <collision>
+      <geometry>
+        <mesh filename="file://$(find my_ur5e_controller)/meshes/gripper.stl" scale="0.001 0.001 0.001"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <mass value="0.2"/>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <inertia ixx="0.001" ixy="0.0" ixz="0.0" iyy="0.001" iyz="0.0" izz="0.001"/>
+    </inertial>
+  </link>
+
+  <!-- Fixed Joint για να κολλήσει στο tool0 -->
+  <joint name="gripper_joint" type="fixed">
+    <parent link="tool0"/>
+    <child link="gripper_link"/>
+    <!-- Το 0 0 0 σημαίνει ακουμπάει ακριβώς στην επιφάνεια του tool0 -->
+    <origin xyz="0 0 0" rpy="0 0 0"/>
+  </joint>
+</robot>

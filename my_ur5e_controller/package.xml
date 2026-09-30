@@ -1,0 +1,52 @@
+<?xml version="1.0"?>
+<?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
+<package format="3">
+  <name>my_ur5e_controller</name>
+  <version>1.0.0</version>
+  <description>
+    Search for the DESTINATION ArUco tag on a suitcase handle with a
+    camera-equipped arm (UR5e in Gazebo, configurable for ABB GoFa 12).
+    See README.md (Greek) and PORTING_GOFA12.md at the repository root.
+  </description>
+  <maintainer email="mariaiwaannidouu@gmail.com">ioathemar</maintainer>
+  <license>Apache-2.0</license>
+
+  <!-- ROS 2 Python / μηνύματα -->
+  <exec_depend>rclpy</exec_depend>
+  <exec_depend>geometry_msgs</exec_depend>
+  <exec_depend>sensor_msgs</exec_depend>
+  <exec_depend>shape_msgs</exec_depend>
+  <exec_depend>visualization_msgs</exec_depend>
+  <exec_depend>moveit_msgs</exec_depend>
+
+  <!-- TF (import tf2_ros / tf2_geometry_msgs) -->
+  <exec_depend>tf2_ros_py</exec_depend>
+  <exec_depend>tf2_geometry_msgs</exec_depend>
+
+  <!-- MoveIt 2 (MoveItPy + MoveItConfigsBuilder στο launch) -->
+  <exec_depend>moveit_py</exec_depend>
+  <exec_depend>moveit_configs_utils</exec_depend>
+
+  <!-- Launch -->
+  <exec_depend>launch</exec_depend>
+  <exec_depend>launch_ros</exec_depend>
+  <exec_depend>ament_index_python</exec_depend>
+
+  <!-- Προσομοίωση: URDF του UR5e + Gazebo + γέφυρα κάμερας -->
+  <exec_depend>xacro</exec_depend>
+  <exec_depend>ur_description</exec_depend>
+  <exec_depend>ur_simulation_gz</exec_depend>
+  <exec_depend>ros_gz_sim</exec_depend>
+  <exec_depend>ros_gz_bridge</exec_depend>
+
+  <!-- Κάμερα / εικόνα -->
+  <exec_depend>cv_bridge</exec_depend>
+  <!-- ΠΡΟΣΟΧΗ: το aruco_multi_detector θέλει OpenCV >= 4.7 (cv2.aruco.ArucoDetector).
+       Το apt του Ubuntu 24.04 δίνει 4.6 -> εγκατάσταση με pip, δες README.md. -->
+  <exec_depend>python3-numpy</exec_depend>
+  <exec_depend>python3-yaml</exec_depend>
+
+  <export>
+    <build_type>ament_python</build_type>
+  </export>
+</package>
